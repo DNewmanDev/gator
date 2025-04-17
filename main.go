@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gator/internal/config"
 	"log"
+	"os"
 )
 
 func main() {
@@ -11,18 +12,27 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to read config: %v", err)
 	}
-	fmt.Println("Initial config: ", cfg)
+	state := &config.State{ConfigPtr: &cfg}
+	commandsList := &config.Commands{}
+	commandsList.Register("login", config.HandlerLogin)
 
-	err = cfg.SetUser("Don")
-	if err != nil {
-		log.Fatalf("Failed to set user: %v", err)
-	}
-	fmt.Println("User set successfully")
+	inputCommand := os.Args
 
-	updatedCfg, err := config.Read()
-	if err != nil {
-		log.Fatalf("Failed to read updated config: %v", err)
+	if len(inputCommand) < 2 {
+		fmt.Println("Input insufficient length, provide command")
+		os.Exit(1)
 	}
-	fmt.Println("Updated config: ", updatedCfg)
-	//read the config file, set user to current user name, read config file again and print struct
+	cmdName := inputCommand[1]
+	cmdArgs := inputCommand[2:]
+	cmd := config.Command{
+		Name: cmdName,
+		Args: cmdArgs,
+	}
+	if err := commandsList.Run(state, cmd); err != nil {
+		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
+	}
+	if err := config.Write(*state.ConfigPtr); err != nil {
+		fmt.Printf("Error writing config %v\n", err)
+	}
 }

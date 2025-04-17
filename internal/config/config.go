@@ -2,6 +2,8 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -11,6 +13,45 @@ const configFileName = ".gatorconfig.json"
 type Config struct { //DB connec config w JSON attachment
 	DBURL           string `json:"db_url"`
 	CurrentUserName string `json:"current_user_name,omitempty"`
+}
+type State struct {
+	ConfigPtr *Config
+}
+
+type Command struct {
+	Name string
+	Args []string
+}
+
+type Commands struct {
+	Commandslist map[string]func(*State, Command) error
+}
+
+func (c *Commands) Register(name string, f func(*State, Command) error) {
+	if c.Commandslist == nil {
+		c.Commandslist = make(map[string]func(*State, Command) error)
+	}
+	c.Commandslist[name] = f
+}
+
+func (c *Commands) Run(s *State, cmd Command) error {
+
+	handler, exists := c.Commandslist[cmd.Name]
+	if !exists {
+		return fmt.Errorf("Unknown command: %s", cmd.Name)
+	}
+	return handler(s, cmd)
+
+}
+
+func HandlerLogin(s *State, cmd Command) error {
+	if len(cmd.Args) == 0 {
+		return errors.New("Login username required")
+	}
+	s.ConfigPtr.CurrentUserName = cmd.Args[0]
+	fmt.Printf("Current user set to %s\n", s.ConfigPtr.CurrentUserName)
+
+	return nil
 }
 
 func Read() (Config, error) {
