@@ -12,6 +12,8 @@ import (
 )
 
 func main() {
+	fmt.Println("------------")
+	fmt.Println("wheredafig")
 	cfg, err := config.Read()
 	if err != nil {
 		log.Fatalf("Failed to read config: %v", err)
@@ -29,11 +31,12 @@ func main() {
 	commandsList.Register("register", config.HandlerRegister)
 	commandsList.Register("reset", config.HandlerReset)
 	commandsList.Register("users", config.HandlerList)
+	commandsList.Register("agg", config.Agg)
 
 	inputCommand := os.Args
 
 	if len(inputCommand) < 2 {
-		fmt.Println("Input insufficient length, provide command\n")
+		fmt.Println("input insufficient length, provide command")
 		os.Exit(1)
 	}
 	cmdName := inputCommand[1]
