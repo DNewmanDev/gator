@@ -7,10 +7,11 @@ import (
 	"html"
 	"io"
 	"net/http"
+	"time"
 )
 
 func FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
-	client := &http.Client{}
+	client := &http.Client{Timeout: 10 * time.Second}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", feedURL, nil)
 	if err != nil {
@@ -39,8 +40,6 @@ func FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 	}
 	feed.Channel.Description = html.UnescapeString(feed.Channel.Description)
 	feed.Channel.Title = html.UnescapeString(feed.Channel.Title)
-	println("------------hey------")
-	println(html.UnescapeString(feed.Channel.Description))
 
 	for i := range feed.Channel.Item {
 		feed.Channel.Item[i].Title = html.UnescapeString(feed.Channel.Item[i].Title)

@@ -86,12 +86,10 @@ func Agg(s *State, cmd Command) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("THIS IS THE FEEEEED RESPONSE FROM AGG! :d %v", feed)
-	fmt.Println(feed.Channel.Description)
+
 	fmt.Println("Channel title: \n", feed.Channel.Title)
 	fmt.Println("Channel description: \n", feed.Channel.Description)
 	fmt.Println("Channel link: \n", feed.Channel.Link)
-
 	fmt.Println("Channel contains the following items: ")
 	for _, item := range feed.Channel.Item {
 		fmt.Println("--Item title: ", item.Title)
@@ -99,5 +97,41 @@ func Agg(s *State, cmd Command) error {
 		fmt.Println("--Item link: ", item.Link)
 		fmt.Println("--Item published: ", item.PubDate)
 	}
+	return nil
+}
+
+func AddFeed(s *State, cmd Command) error {
+	if len(cmd.Args) < 2 {
+		return fmt.Errorf("requires feed name and URL")
+	}
+	name := cmd.Args[0]
+	url := cmd.Args[1]
+	user, err := s.Db.GetUser(context.Background(), s.ConfigPtr.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("failed to get user %v", err)
+	}
+	feed, err := s.Db.CreateFeed(context.Background(), database.CreateFeedParams{Name: name, Url: url, UserID: uuid.NullUUID{UUID: user.ID, Valid: true}})
+
+	if err != nil {
+		return fmt.Errorf("failed to create feed: %v", err)
+	}
+	fmt.Println("Feed created (:")
+	fmt.Printf("ID=%s, Name=%s, URL=%s\n", feed.ID, feed.Name, feed.Url)
+
+	return nil
+}
+
+func HandlerFeedsDisplay(s *State, cmd Command) error {
+	feeds, err := s.Db.ListFeedsWithUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to get feeds %v", err)
+	}
+
+	for _, feed := range feeds {
+		fmt.Printf("Feed Name: %v\n", feed.FeedName)
+		fmt.Printf("Feed URL: %v\n", feed.FeedsUrl)
+		fmt.Printf("Feed Adder: %v\n", feed.UserName)
+	}
+
 	return nil
 }
