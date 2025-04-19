@@ -1,11 +1,16 @@
 package config
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"gator/internal/database"
 	"os"
 	"path/filepath"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 const configFileName = ".gatorconfig.json"
@@ -16,6 +21,7 @@ type Config struct { //DB connec config w JSON attachment
 }
 type State struct {
 	ConfigPtr *Config
+	Db        *database.Queries
 }
 
 type Command struct {
@@ -48,9 +54,45 @@ func HandlerLogin(s *State, cmd Command) error {
 	if len(cmd.Args) == 0 {
 		return errors.New("Login username required")
 	}
+
+	_, err := s.Db.GetUser(context.Background(), cmd.Args[0])
+	if err != nil {
+		fmt.Printf("User with name %s does not exist\n", cmd.Args[0])
+
+		os.Exit(1)
+	}
+
 	s.ConfigPtr.CurrentUserName = cmd.Args[0]
 	fmt.Printf("Current user set to %s\n", s.ConfigPtr.CurrentUserName)
 
+	return nil
+}
+
+func HandlerRegister(s *State, cmd Command) error {
+
+	if len(cmd.Args) == 0 {
+		return errors.New("Username required for registration")
+	}
+
+	_, err := s.Db.GetUser(context.Background(), cmd.Args[0])
+	if err == nil {
+		fmt.Printf("User with name '%s' already exists\n", cmd.Args[0])
+		os.Exit(1)
+	}
+	user := database.CreateUserParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Name:      cmd.Args[0],
+	}
+
+	newUser, err := s.Db.CreateUser(context.Background(), user)
+	if err != nil {
+		println("User creation failed, user already exists")
+		os.Exit(1)
+	}
+	s.ConfigPtr.CurrentUserName = newUser.Name
+	fmt.Printf("User creation successful, Name: %s ID: %v Time: %v\n", user.Name, user.ID, user.CreatedAt)
 	return nil
 }
 
