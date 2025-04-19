@@ -28,6 +28,7 @@ func main() {
 	commandsList.Register("login", config.HandlerLogin)
 	commandsList.Register("register", config.HandlerRegister)
 	commandsList.Register("reset", config.HandlerReset)
+	commandsList.Register("users", config.HandlerList)
 
 	inputCommand := os.Args
 

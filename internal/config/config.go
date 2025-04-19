@@ -102,6 +102,23 @@ func HandlerReset(s *State, cmd Command) error {
 
 	return nil
 }
+func HandlerList(s *State, cmd Command) error {
+
+	users, err := s.Db.ListUsers(context.Background())
+	if err != nil {
+		fmt.Println("Failed to find users for listing")
+		os.Exit(1)
+	}
+	currentUser := s.ConfigPtr.CurrentUserName
+	for _, user := range users {
+		if user.Name == currentUser {
+			fmt.Printf("* %s (current)\n", user.Name)
+		} else {
+			fmt.Printf("* %s\n", user.Name)
+		}
+	}
+	return nil
+}
 
 func Read() (Config, error) {
 	filepath, err := getConfigFilePath()
