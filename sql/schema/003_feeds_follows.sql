@@ -1,0 +1,15 @@
+-- +goose Up
+CREATE TABLE feed_follows(
+id  UUID UNIQUE PRIMARY KEY,
+created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+user_id UUID REFERENCES users(id) UNIQUE,
+feed_id UUID REFERENCES feeds(id) UNIQUE
+);
+
+-- +goose Down
+DROP TABLE feed_follows;
+
+
+
+
