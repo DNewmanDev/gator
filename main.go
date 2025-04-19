@@ -27,11 +27,12 @@ func main() {
 	commandsList := &config.Commands{}
 	commandsList.Register("login", config.HandlerLogin)
 	commandsList.Register("register", config.HandlerRegister)
+	commandsList.Register("reset", config.HandlerReset)
 
 	inputCommand := os.Args
 
 	if len(inputCommand) < 2 {
-		fmt.Println("Input insufficient length, provide command")
+		fmt.Println("Input insufficient length, provide command\n")
 		os.Exit(1)
 	}
 	cmdName := inputCommand[1]

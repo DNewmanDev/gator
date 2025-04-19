@@ -96,6 +96,13 @@ func HandlerRegister(s *State, cmd Command) error {
 	return nil
 }
 
+func HandlerReset(s *State, cmd Command) error {
+
+	s.Db.ResetTable(context.Background())
+
+	return nil
+}
+
 func Read() (Config, error) {
 	filepath, err := getConfigFilePath()
 	if err != nil {
