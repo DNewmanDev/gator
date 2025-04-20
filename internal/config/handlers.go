@@ -135,3 +135,30 @@ func HandlerFeedsDisplay(s *State, cmd Command) error {
 
 	return nil
 }
+
+func HandlerFollow(s *State, cmd Command) error {
+	if len(cmd.Args) < 1 {
+		return fmt.Errorf("URL required")
+	}
+	//need a query to grab feed by URL
+	url := cmd.Args[0]
+	user, err := s.Db.GetUser(context.Background(), s.ConfigPtr.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("failed to grab current user, error: %v", err)
+	}
+	feed, err := s.Db.GetFeedByUrl(context.Background(), url)
+	if err != nil {
+		return fmt.Errorf("failed to retrieve feed, error: %v", err)
+	}
+	params := database.CreateFeedFollowParams{UserID: user.ID, FeedID: feed.ID}
+
+	feedFollows, err := s.Db.CreateFeedFollow(context.Background(), params)
+	if err != nil {
+		return fmt.Errorf("failed to create feed follows entry, error: %v", err)
+	}
+	if len(feedFollows) > 0 {
+		feedFollow := feedFollows[0]
+		fmt.Printf("User %s is now following feed %s\n", feedFollow.UserName, feedFollow.FeedName)
+	}
+	return nil
+}

@@ -1,10 +1,15 @@
 -- name: CreateFeedFollow :many
 WITH inserted_feed_follow AS(
 
-    INSERT INTO feed_follows()VALUES()RETURNING *
+    INSERT INTO feed_follows (user_id, feed_id)
+    VALUES($1, $2) RETURNING *
 )
 SELECT 
-inserted_feed_follow.*, feeds.name AS feed_name, users_name AS user_name
-FROM inserted_feed_follow
-INNER JOIN
-INNER JOIN
+ff.*, f.name AS feed_name, u.name AS user_name
+FROM inserted_feed_follow ff
+INNER JOIN feeds f on ff.feed_id = f.id 
+INNER JOIN users u on ff.user_id = u.id;
+
+
+
+-- come look at this one later
