@@ -100,16 +100,13 @@ func Agg(s *State, cmd Command) error {
 	return nil
 }
 
-func AddFeed(s *State, cmd Command) error {
+func AddFeed(s *State, cmd Command, user database.User) error {
 	if len(cmd.Args) < 2 {
 		return fmt.Errorf("requires feed name and URL")
 	}
 	name := cmd.Args[0]
 	url := cmd.Args[1]
-	user, err := s.Db.GetUser(context.Background(), s.ConfigPtr.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to get user %v", err)
-	}
+
 	feed, err := s.Db.CreateFeed(context.Background(), database.CreateFeedParams{Name: name, Url: url, UserID: uuid.NullUUID{UUID: user.ID, Valid: true}})
 
 	if err != nil {
@@ -148,16 +145,13 @@ func HandlerFeedsDisplay(s *State, cmd Command) error {
 	return nil
 }
 
-func HandlerFollow(s *State, cmd Command) error {
+func HandlerFollow(s *State, cmd Command, user database.User) error {
 	if len(cmd.Args) < 1 {
 		return fmt.Errorf("URL required")
 	}
 	//need a query to grab feed by URL
 	url := cmd.Args[0]
-	user, err := s.Db.GetUser(context.Background(), s.ConfigPtr.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to grab current user, error: %v", err)
-	}
+
 	feed, err := s.Db.GetFeedByUrl(context.Background(), url)
 	if err != nil {
 		return fmt.Errorf("failed to retrieve feed, error: %v", err)
@@ -175,11 +169,8 @@ func HandlerFollow(s *State, cmd Command) error {
 	return nil
 }
 
-func HandlerFollowing(s *State, cmd Command) error {
-	user, err := s.Db.GetUser(context.Background(), s.ConfigPtr.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to grab current user, error: %v", err)
-	}
+func HandlerFollowing(s *State, cmd Command, user database.User) error {
+
 	feedFollows, err := s.Db.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {
 		return fmt.Errorf("failed to grab feedfollows for currentf user, error: %v", err)
