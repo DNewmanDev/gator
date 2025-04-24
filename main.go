@@ -34,6 +34,7 @@ func main() {
 	commandsList.Register("addfeed", config.AddFeed)
 	commandsList.Register("feeds", config.HandlerFeedsDisplay)
 	commandsList.Register("follow", config.HandlerFollow)
+	commandsList.Register("following", config.HandlerFollowing)
 
 	inputCommand := os.Args
 

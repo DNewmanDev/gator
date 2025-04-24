@@ -22,7 +22,7 @@ SELECT
 ff.id, ff.created_at, ff.updated_at, ff.user_id, ff.feed_id, f.name AS feed_name, u.name AS user_name
 FROM inserted_feed_follow ff
 INNER JOIN feeds f on ff.feed_id = f.id 
-INNER JOIN users u on ff.feed_id = u.id
+INNER JOIN users u on ff.user_id = u.id
 `
 
 type CreateFeedFollowParams struct {
