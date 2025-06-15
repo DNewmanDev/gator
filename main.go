@@ -37,6 +37,7 @@ func main() {
 	commandsList.Register("follow", middlewareLoggedIn(config.HandlerFollow))
 	commandsList.Register("following", middlewareLoggedIn(config.HandlerFollowing))
 	commandsList.Register("unfollow", middlewareLoggedIn(config.HandlerUnfollow))
+	commandsList.Register("browse", middlewareLoggedIn(config.HandlerBrowse))
 
 	inputCommand := os.Args
 
