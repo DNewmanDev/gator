@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"gator/internal/database"
+	"log"
 	"os"
 	"time"
 
@@ -82,22 +83,19 @@ func HandlerList(s *State, cmd Command) error {
 }
 
 func Agg(s *State, cmd Command) error {
-	feed, err := FetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
+	//neds protection logic against incorrect user input
+	time_between_reqs := cmd.Args[0]
+	parsedDuration, err := time.ParseDuration(time_between_reqs)
 	if err != nil {
 		return err
 	}
+	fmt.Println("Collecting feeds every \n", parsedDuration)
 
-	fmt.Println("Channel title: \n", feed.Channel.Title)
-	fmt.Println("Channel description: \n", feed.Channel.Description)
-	fmt.Println("Channel link: \n", feed.Channel.Link)
-	fmt.Println("Channel contains the following items: ")
-	for _, item := range feed.Channel.Item {
-		fmt.Println("--Item title: ", item.Title)
-		fmt.Println("--Item description: ", item.Description)
-		fmt.Println("--Item link: ", item.Link)
-		fmt.Println("--Item published: ", item.PubDate)
+	ticker := time.NewTicker(parsedDuration)
+	for ; ; <-ticker.C {
+		scrapeFeeds(s)
 	}
-	return nil
+
 }
 
 func AddFeed(s *State, cmd Command, user database.User) error {
@@ -149,7 +147,7 @@ func HandlerFollow(s *State, cmd Command, user database.User) error {
 	if len(cmd.Args) < 1 {
 		return fmt.Errorf("URL required")
 	}
-	//need a query to grab feed by URL
+
 	url := cmd.Args[0]
 
 	feed, err := s.Db.GetFeedByUrl(context.Background(), url)
@@ -184,4 +182,50 @@ func HandlerFollowing(s *State, cmd Command, user database.User) error {
 		fmt.Printf("%d. %s\n", i+1, ff.FeedName)
 	}
 	return nil
+}
+
+func HandlerUnfollow(s *State, cmd Command, user database.User) error {
+	if len(cmd.Args) < 1 {
+		return fmt.Errorf("URL required")
+	}
+	targeturl := cmd.Args[0]
+
+	params := database.DeleteFeedFollowParams{UserID: user.ID, Url: targeturl}
+	err := s.Db.DeleteFeedFollow(context.Background(), params)
+	if err != nil {
+		return fmt.Errorf("failed to grab delete for , error: %v", err)
+	}
+	fmt.Printf("Feed with URL %s unfollowed", targeturl)
+	return nil
+}
+
+func scrapeFeeds(s *State) {
+
+	//get next feed to fetch
+	nextFeed, err := s.Db.GetNextFeedToFetch(context.Background())
+	if err != nil {
+		log.Println("failed to grab next feed, err: %v", err)
+		return
+	}
+	//mark it as fetched
+	log.Println("Fetching feed \n", nextFeed)
+	scrapeFeed(s.Db, nextFeed)
+
+}
+
+func scrapeFeed(db *database.Queries, feed database.Feed) {
+	_, err := db.MarkFeedFetched(context.Background(), feed.ID)
+	if err != nil {
+		log.Printf("failed to mark next feed, err: %v", err)
+		return
+	}
+	returnedFeed, err := FetchFeed(context.Background(), feed.Url)
+	if err != nil {
+		log.Printf("failed to get feed, err: %v", err)
+		return
+	}
+	for _, object := range returnedFeed.Channel.Item {
+		fmt.Println(object.Title)
+	}
+
 }

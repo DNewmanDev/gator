@@ -36,6 +36,7 @@ func main() {
 	commandsList.Register("feeds", config.HandlerFeedsDisplay)
 	commandsList.Register("follow", middlewareLoggedIn(config.HandlerFollow))
 	commandsList.Register("following", middlewareLoggedIn(config.HandlerFollowing))
+	commandsList.Register("unfollow", middlewareLoggedIn(config.HandlerUnfollow))
 
 	inputCommand := os.Args
 
