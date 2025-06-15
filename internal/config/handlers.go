@@ -2,11 +2,13 @@ package config
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"gator/internal/database"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -204,7 +206,7 @@ func scrapeFeeds(s *State) {
 	//get next feed to fetch
 	nextFeed, err := s.Db.GetNextFeedToFetch(context.Background())
 	if err != nil {
-		log.Println("failed to grab next feed, err: %v", err)
+		log.Println("Failed to grab next feed, err: %v", err)
 		return
 	}
 	//mark it as fetched
@@ -225,7 +227,34 @@ func scrapeFeed(db *database.Queries, feed database.Feed) {
 		return
 	}
 	for _, object := range returnedFeed.Channel.Item {
-		fmt.Println(object.Title)
-	}
+		publishedAt := sql.NullTime{}
+		if t, err := time.Parse(time.RFC1123Z, object.PubDate); err == nil {
+			publishedAt = sql.NullTime{
+				Time:  t,
+				Valid: true,
+			}
+		}
 
+		_, err = db.CreatePost(context.Background(), database.CreatePostParams{
+			ID:        uuid.New(),
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
+			FeedID:    feed.ID,
+			Title:     object.Title,
+			Description: sql.NullString{
+				String: object.Description,
+				Valid:  true,
+			},
+			Url:         object.Link,
+			PublishedAt: publishedAt,
+		})
+		if err != nil {
+			if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
+				continue
+			}
+			log.Printf("Couldn't create post: %v", err)
+			continue
+		}
+	}
+	log.Printf("Feed %s collected, %v posts found", feed.Name, len(returnedFeed.Channel.Item))
 }
