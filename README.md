@@ -10,6 +10,16 @@ This interactive command-line RSS feed aggregator built with Go features user ma
 - **Content Persistence**: PostgreSQL database with comprehensive schema
 - **CLI Interface**: Intuitive command-line interface with context-aware operations
 
+## 🎯 Skills Demonstrated
+
+- **Database Architecture**: Complex relational schema design and migration management
+- **Concurrent Programming**: Goroutines, context management, and thread safety
+- **HTTP Client Development**: Custom clients with proper timeout and error handling
+- **CLI Framework Design**: Command registration and execution patterns
+- **Error Handling**: Comprehensive error propagation and user feedback
+- **Code Generation**: Integration with SQLC for type-safe database operations
+
+  
 ## 🏗️ Technical Architecture
 
 ### Database Design
@@ -33,7 +43,6 @@ This interactive command-line RSS feed aggregator built with Go features user ma
 - **PostgreSQL**: Relational database with complex schemas
 - **SQLC**: Compile-time SQL query generation
 - **RSS/XML Processing**: Custom RSS parser with HTML entity decoding
-- **JSON Configuration**: User configuration persistence
 
 ## 🔧 Technical Highlights
 
@@ -57,14 +66,6 @@ user, err := db.GetUser(ctx, username)
 - HTML entity decoding for proper content display
 - Duplicate post detection and filtering
 
-## 🎯 Skills Demonstrated
-
-- **Database Architecture**: Complex relational schema design and migration management
-- **Concurrent Programming**: Goroutines, context management, and thread safety
-- **HTTP Client Development**: Custom clients with proper timeout and error handling
-- **CLI Framework Design**: Command registration and execution patterns
-- **Error Handling**: Comprehensive error propagation and user feedback
-- **Code Generation**: Integration with SQLC for type-safe database operations
 
 ## 🚀 Getting Started
 
@@ -75,7 +76,7 @@ user, err := db.GetUser(ctx, username)
 ### Installation
 ```bash
 # Clone and build
-git clone https://github.com/DonJNewman/gator.git
+git clone https://github.com/DNewmanDev/gator.git
 cd gator
 go build -o gator
 ```
