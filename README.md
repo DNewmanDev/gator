@@ -89,11 +89,11 @@ go build
 -sudo apt install postgresql postgresql-contrib
 ```
 
--set password(do not forget your pass):
+-Set password(do not forget your pass):
  ```bash
   sudo passwd postgres
 ```
--enter postgres shell:
+-Enter postgres shell:
 
   -Mac: 
   ```bash
