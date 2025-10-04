@@ -69,24 +69,31 @@ user, err := db.GetUser(ctx, username)
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Go 1.24+
-- PostgreSQL 12+
+### Setup Instructions
+- Manually create a config file in your home directory, ~/.gatorconfig.json, with the following content:
+{
+  "db_url": "postgres://postgres:postgres@localhost:5432/gator"
+}
+- Install Go 1.24+ available at go.dev/dl
 
-### Installation
 ```bash
 # Clone and build
 git clone https://github.com/DNewmanDev/gator.git
 cd gator
-go build -o gator
+go build
 ```
+- Install PostgreSQL 12+ available at https://www.postgresql.org/download/
+    or
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+set password with sudo passwd postgres (do not forget this)
+enter postgres shell:
+  Mac: psql postgres  
+  Linux: sudo -u postgres psql
+CREATE DATABASE gator;
+Set the user password (Linux only)
+  ALTER USER postgres PASSWORD '<password>';
 
-### Database Setup
-```bash
-# Create database and run migrations
-createdb gator
-# Migrations are handled automatically on first run
-```
 
 ### Usage
 ```bash
