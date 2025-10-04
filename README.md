@@ -84,15 +84,24 @@ go build
 ```
 - Install PostgreSQL 12+ available at https://www.postgresql.org/download/
     or
+  
 -sudo apt update
 
 -sudo apt install postgresql postgresql-contrib
 
--set password with sudo passwd postgres (do not forget this)
-
+-set password(do not forget your pass):
+ ```bash
+  sudo passwd postgres
+```
 -enter postgres shell:
   -Mac: psql postgres  
-  -Linux: sudo -u postgres psql
+  ```bash
+  psql postgres
+```
+  -Linux: 
+   ```bash
+ sudo -u postgres psql
+```
   
 -CREATE DATABASE gator;
 -Set the user password (Linux only)
