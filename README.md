@@ -136,13 +136,13 @@ gator addfeed <name> <url>
 gator feeds
 
 # Follow feeds
-gator follow <feed_name>
+gator follow <feed_url>
 
 # List followed feeds
 gator following
 
 # Unfollow feed
-gator unfollow <feed_name>
+gator unfollow <feed_url>
 
 # Start background aggregation (30 second intervals)
 gator agg 30s
