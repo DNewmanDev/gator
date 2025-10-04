@@ -91,8 +91,8 @@ go build
 -set password with sudo passwd postgres (do not forget this)
 
 -enter postgres shell:
-  Mac: psql postgres  
-  Linux: sudo -u postgres psql
+  -Mac: psql postgres  
+  -Linux: sudo -u postgres psql
   
 -CREATE DATABASE gator;
 -Set the user password (Linux only)
