@@ -92,36 +92,36 @@ createdb gator
 ```bash
 
 # Clear all data
-go run . reset
+gator reset
 
 # List all users
-go run . users
+gator users
 
 # Register a new user
-go run . register <username>
+gator register <username>
 
 # Switch user
-go run . login <username>
+gator login <username>
 
 # Add RSS feeds
-go run . addfeed <name> <url>
+gator addfeed <name> <url>
 
 # List RSS feeds
-go run . feeds
+gator feeds
 
 # Follow feeds
-go run . follow <feed_name>
+gator follow <feed_name>
 
 # List followed feeds
-go run . following
+gator following
 
 # Unfollow feed
-go run . unfollow <feed_name>
+gator unfollow <feed_name>
 
 # Start background aggregation (30 second intervals)
-go run . agg 30s
+gator agg 30s
 >Ctrl+C to cancel aggregation
 
 # Browse collected posts
-go run . browse [limit]
+gator browse [limit]
 ```
