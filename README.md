@@ -90,34 +90,38 @@ createdb gator
 
 ### Usage
 ```bash
+
+# Clear all data
+go run . reset
+
+# List all users
+go run . users
+
 # Register a new user
-./gator register <username>
+go run . register <username>
+
+# Switch user
+go run . login <username>
 
 # Add RSS feeds
-./gator addfeed <name> <url>
+go run . addfeed <name> <url>
+
+# List RSS feeds
+go run . feeds
 
 # Follow feeds
-./gator follow <feed_name>
+go run . follow <feed_name>
+
+# List followed feeds
+go run . following
+
+# Unfollow feed
+go run . unfollow <feed_name>
 
 # Start background aggregation (30 second intervals)
-./gator agg 30s
+go run . agg 30s
+>Ctrl+C to cancel aggregation
 
 # Browse collected posts
-./gator browse [limit]
+go run . browse [limit]
 ```
-
-## 📋 Available Commands
-
-- `register <username>` - Create new user account
-- `login <username>` - Switch active user
-- `reset` - Clear all data
-- `users` - List all registered users
-- `addfeed <name> <url>` - Add new RSS feed
-- `feeds` - List all available feeds
-- `follow <feed_name>` - Subscribe to a feed
-- `following` - Show your feed subscriptions
-- `unfollow <feed_name>` - Unsubscribe from feed
-- `agg <duration>` - Start background feed fetching
-- `browse [limit]` - View collected posts
-
-This project demonstrates production-ready Go development practices, including proper database design, concurrent programming, and robust error handling suitable for enterprise applications.
