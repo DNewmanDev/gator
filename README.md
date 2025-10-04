@@ -94,6 +94,7 @@ go build
   sudo passwd postgres
 ```
 -enter postgres shell:
+
   -Mac: 
   ```bash
   psql postgres
