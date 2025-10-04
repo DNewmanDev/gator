@@ -103,12 +103,12 @@ go build
  sudo -u postgres psql
 ```
   
--CREATE DATABASE: 
+-Create the database: 
 ```bash
 CREATE DATABASE gator;
 ```
+
 -Set the user password (Linux only)
- 
 ```bash
  ALTER USER postgres PASSWORD '<password>';
 ```
