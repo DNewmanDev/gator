@@ -151,3 +151,15 @@ gator agg 30s
 # Browse collected posts
 gator browse [limit]
 ```
+### Sample Feed URLs:
+https://techcrunch.com/feed/ - TechCrunch
+https://Www.techradar.com/feeds.xml - TechRadar
+
+### Demo
+
+<img width="4033" height="1980" alt="gator 1 - users login unfollow follow add agg" src="https://github.com/user-attachments/assets/42390c60-0c02-465a-af7a-e2677f06f259" />
+
+<img width="4050" height="1987" alt="successful agg and browse" src="https://github.com/user-attachments/assets/eb449092-8c3c-4fb1-97c2-528cc952f4eb" />
+
+<img width="4062" height="1922" alt="multi follow feed" src="https://github.com/user-attachments/assets/d4990f08-c29e-418d-9265-0369738a178e" />
+
